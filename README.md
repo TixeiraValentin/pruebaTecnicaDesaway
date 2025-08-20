@@ -95,23 +95,6 @@ cd android
 ./gradlew.bat bundleRelease
 ```
 
-## Cambiar el ícono de la app (Android)
-
-Reemplaza los PNG manteniendo los nombres en `android/app/src/main/res/`:
-
-- `mipmap-mdpi/ic_launcher.png` (48x48)
-- `mipmap-hdpi/ic_launcher.png` (72x72)
-- `mipmap-xhdpi/ic_launcher.png` (96x96)
-- `mipmap-xxhdpi/ic_launcher.png` (144x144)
-- `mipmap-xxxhdpi/ic_launcher.png` (192x192)
-- Opcional: `ic_launcher_round.png` en cada carpeta
-
-O usa Android Studio → New → Image Asset (nombre: `ic_launcher`).
-
-## Recursos del PDF
-
-Los SVG usados por el PDF están embebidos en Android desde `android/app/src/main/assets/` y se referencian via `file:///android_asset/...`.
-
 ## Notas y permisos
 
 - Android 13+ (SDK 33): no se requiere WRITE_EXTERNAL_STORAGE para guardar en Descargas (la app ya maneja este caso).
