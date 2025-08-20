@@ -1,97 +1,118 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+<div align="center">
 
-# Getting Started
+# DesawayApp – Prueba Técnica
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Generación y visualización de PDFs en React Native (Android/iOS) con arquitectura por capas, validación de formularios y persistencia local.
 
-## Step 1: Start Metro
+</div>
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Stack técnico
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- React Native 0.81 (Hermes enabled)
+- React 19
+- TypeScript 5
+- React Navigation (Stack)
+- React Hook Form + Yup
+- AsyncStorage
+- react-native-html-to-pdf (generación de PDF)
+- react-native-pdf (visualización de PDF)
+- RNFS / BlobUtil (descarga a Descargas)
 
-```sh
-# Using npm
+## Estructura del proyecto
+
+```
+src/
+  app/                # Bootstrap de la app (navegación, splash, error boundary)
+  core/               # Dominio: entidades, casos de uso, contratos
+  infrastructure/     # Implementaciones: repositorios, servicios
+  presentation/       # UI: pantallas, navegación, tema, componentes, utils
+```
+
+- `src/app/AppRoot.tsx`: orquesta navegación, splash y ErrorBoundary.
+- `src/presentation/navigation/AppNavigation.tsx`: Stack Navigator.
+- `src/presentation/screens/generate-pdf/GeneratePdfScreen.tsx`: formulario, validación y envío a caso de uso.
+- `src/core/useCases/GeneratePdfUseCase.ts`: caso de uso para generar PDF.
+- `src/infrastructure/repositories/PdfLibRepository.ts`: usa `react-native-html-to-pdf` para crear el PDF.
+- `src/presentation/screens/pdf-viewer/PdfViewerScreen.tsx`: visor de PDF con opción de descarga a carpeta Descargas.
+- `src/infrastructure/services/AsyncStorageService.ts`: persistencia del último formulario.
+- `src/presentation/theme/Colors.ts`: paleta de colores.
+- `src/presentation/utils/inputFormatters.ts`: formateadores de entrada (solo letras, solo dígitos).
+
+## Flujo funcional
+
+1. Pantalla `GeneratePdf` captura: Dato 1 (texto), Dato 2 (opción), Dato 3 (numérico).
+2. Al enviar, se construye `FormDataEntity` y se ejecuta `GeneratePdfUseCase`.
+3. El repositorio `PdfLibRepository` renderiza un HTML y genera el PDF en Documentos.
+4. Se navega a `PdfViewer` para previsualizar y descargar el archivo.
+5. El formulario se guarda con `AsyncStorage` para recuperar valores al reiniciar.
+
+## Requisitos previos
+
+- Node 18+
+- JDK 17 (recomendado) o 11
+- Android SDK (variables ANDROID_HOME/ANDROID_SDK_ROOT configuradas)
+- Dispositivo/Emulador Android
+
+## Ejecutar en desarrollo
+
+```bash
+# Instalar dependencias
+npm install
+
+# Iniciar Metro
 npm start
 
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+# En otra terminal, Android (depende del SDK y un dispositivo)
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+## Generar APK (para instalar y compartir)
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+Este proyecto ya firma el build de `release` con el keystore de debug (solo para pruebas). No usar en producción.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+Rutas de salida:
+- Debug: `android/app/build/outputs/apk/debug/app-debug.apk`
+- Release: `android/app/build/outputs/apk/release/app-release.apk`
 
-```sh
-bundle install
+Comandos (Windows PowerShell):
+
+```powershell
+cd android
+./gradlew.bat clean assembleRelease
 ```
 
-Then, and every time you update your native dependencies, run:
+Si prefieres Debug APK:
 
-```sh
-bundle exec pod install
+```powershell
+cd android
+./gradlew.bat assembleDebug
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+También puedes generar AAB (Play Store):
 
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+```powershell
+cd android
+./gradlew.bat bundleRelease
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Cambiar el ícono de la app (Android)
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Reemplaza los PNG manteniendo los nombres en `android/app/src/main/res/`:
 
-## Step 3: Modify your app
+- `mipmap-mdpi/ic_launcher.png` (48x48)
+- `mipmap-hdpi/ic_launcher.png` (72x72)
+- `mipmap-xhdpi/ic_launcher.png` (96x96)
+- `mipmap-xxhdpi/ic_launcher.png` (144x144)
+- `mipmap-xxxhdpi/ic_launcher.png` (192x192)
+- Opcional: `ic_launcher_round.png` en cada carpeta
 
-Now that you have successfully run the app, let's make changes!
+O usa Android Studio → New → Image Asset (nombre: `ic_launcher`).
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Recursos del PDF
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+Los SVG usados por el PDF están embebidos en Android desde `android/app/src/main/assets/` y se referencian via `file:///android_asset/...`.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## Notas y permisos
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- Android 13+ (SDK 33): no se requiere WRITE_EXTERNAL_STORAGE para guardar en Descargas (la app ya maneja este caso).
+- En Android <=12, se solicita `WRITE_EXTERNAL_STORAGE` cuando descargas el PDF desde el visor.
