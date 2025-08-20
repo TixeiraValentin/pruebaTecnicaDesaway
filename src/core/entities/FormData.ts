@@ -8,5 +8,3 @@ export type GeneratedPdf = {
 	filePath: string;
 	fileName: string;
 };
-
-
