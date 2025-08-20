@@ -2,7 +2,7 @@
 
 # DesawayApp – Prueba Técnica
 
-Generación y visualización de PDFs en React Native (Android/iOS) con arquitectura por capas, validación de formularios y persistencia local.
+Generación y visualización de PDFs en React Native (Android) con arquitectura por capas, validación de formularios y persistencia local.
 
 </div>
 
