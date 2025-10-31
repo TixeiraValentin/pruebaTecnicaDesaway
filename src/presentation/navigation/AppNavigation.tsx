@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { GeneratePdfScreen } from '../screens/generate-pdf/GeneratePdfScreen';
 import { PdfViewerScreen } from '../screens/pdf-viewer/PdfViewerScreen';
+import { ImageRenderTest } from '../screens/image-render-test/ImageRenderTest';
 import type { RootStackParams } from './types';
 
 const Stack = createStackNavigator<RootStackParams>();
@@ -22,6 +23,7 @@ export const AppNavigation: React.FC = () => {
           component={PdfViewerScreen as any}
           initialParams={{ uri: '', fileName: undefined }}
         />
+        <Stack.Screen name="ImageRenderTest" component={ImageRenderTest as any} />
       </Stack.Navigator>
     </NavigationContainer>
   );

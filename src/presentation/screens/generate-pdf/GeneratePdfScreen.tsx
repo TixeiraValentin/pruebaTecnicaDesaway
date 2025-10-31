@@ -198,6 +198,21 @@ export const GeneratePdfScreen: FC = () => {
               {isGenerating ? 'Generando…' : 'Generar PDF'}
             </Text>
           </Pressable>
+
+          <Pressable
+            style={({pressed}) => [
+              styles.secondaryButton,
+              pressed && styles.secondaryButtonPressed,
+            ]}
+            android_ripple={{color: 'rgba(0,0,0,0.1)'}}
+            onPress={() => {
+              console.log('[GeneratePdfScreen] Navigate to ImageRenderTest');
+              navigation.navigate('ImageRenderTest');
+            }}>
+            <Text style={styles.secondaryButtonText}>
+              🧪 Test de Rendimiento de Imágenes
+            </Text>
+          </Pressable>
         </ScrollView>
       </View>
     </View>
@@ -278,4 +293,21 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   primaryButtonText: {color: Colors.textOnPrimary},
+  secondaryButton: {
+    marginTop: 8,
+    backgroundColor: Colors.textOnPrimary,
+    borderRadius: 12,
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderWidth: 2,
+    borderColor: Colors.primary,
+  },
+  secondaryButtonPressed: {
+    transform: [{scale: 0.98}],
+    opacity: 0.9,
+  },
+  secondaryButtonText: {
+    color: Colors.primary,
+    fontWeight: '600',
+  },
 });
